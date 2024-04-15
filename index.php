@@ -47,6 +47,8 @@
                 <a class="nav-link" href="./index.php?controller=ProductosController&action=index">Productos</a>
                 <a class="nav-link" href="./index.php?controller=GenerosController&action=index">Generos</a>
                 <a class="nav-link" href="./index.php?controller=PeliculasController&action=index">Películas</a>
+                <a class="nav-link" href="./index.php?controller=VentasController&action=indexProductos">Venta de productos</a>
+                <a class="nav-link" href="./index.php?controller=VentasController&action=indexPeliculas">Venta de boletos</a>
 
             </li>
         </ul>
