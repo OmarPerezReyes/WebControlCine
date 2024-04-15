@@ -14,6 +14,7 @@ class PeliculasController {
 
     public function index() {
         $peliculas = $this->peliculasModel->obtenerPeliculas();
+        
         $generos = $this->generosModel->obtenerGeneros(); // Obtener lista de géneros
          // Crear un diccionario de géneros para buscar nombres de género por ID de género
     $generos_dict = [];
@@ -21,16 +22,19 @@ class PeliculasController {
         $generos_dict[$genero['id_genero']] = $genero['nombre'];
     }
 
-    // Agregar el nombre del género correspondiente a cada película
-    foreach ($peliculas as &$pelicula) {
-        $genero_id = $pelicula['id_genero'];
-        if (isset($generos_dict[$genero_id])) {
-            $pelicula['genero_nombre'] = $generos_dict[$genero_id];
-        } else {
-            $pelicula['genero_nombre'] = 'Desconocido'; // Manejo de géneros desconocidos
-        }
+   // Crear una copia de cada película para evitar modificar el array original
+foreach ($peliculas as $key => $pelicula) {
+    $genero_id = $pelicula['id_genero'];
+    if (isset($generos_dict[$genero_id])) {
+        // Agregar el nombre del género correspondiente a la copia de la película
+        $peliculas[$key]['genero_nombre'] = $generos_dict[$genero_id];
+    } else {
+        // Si el género no está definido en $generos_dict, asignar 'Desconocido'
+        $peliculas[$key]['genero_nombre'] = 'Desconocido';
     }
+}
 
+    
         include './views/peliculas/index.php';
     }
 

@@ -1,38 +1,47 @@
 <?php
 
+require_once './models/Peliculas.php';
 require_once './models/Productos.php';
 require_once './models/Clientes.php';
 require_once './models/Empleados.php';
 require_once './models/TicketProducto.php';
+require_once './models/TicketPelicula.php';
 
 class VentasController {
+    private $peliculasModel;
     private $productosModel;
     private $clientesModel;
     private $empleadosModel;
     private $ticketProductoModel;
 
     public function __construct() {
+        $this->peliculasModel = new Peliculas();
         $this->productosModel = new Productos();
         $this->clientesModel = new Clientes();
         $this->empleadosModel = new Empleados();
         $this->ticketProductoModel = new TicketProducto();
+        $this->ticketPeliculaModel = new TicketPelicula();
     }
+
+
+    //PRODUCTOS
 
     public function indexProductos() {
         $ventas = $this->ticketProductoModel->obtenerTicketsProducto();
-        // Obtener nombres de clientes y empleados
-    foreach ($ventas as &$venta) {
-        $id_cliente = $venta['id_cliente'];
-        $id_empleado = $venta['id_empleado'];
+       // Obtener nombres de clientes y empleados
+foreach ($ventas as $index => $venta) {
+    $id_cliente = $venta['id_cliente'];
+    $id_empleado = $venta['id_empleado'];
 
-        // Obtener nombre del cliente
-        $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
-        $venta['cliente_nombre'] = $cliente['nombre'];
+    // Obtener nombre del cliente
+    $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
+    $ventas[$index]['cliente_nombre'] = $cliente['nombre'];
 
-        // Obtener nombre del empleado
-        $empleado = $this->empleadosModel->obtenerEmpleadoPorId($id_empleado);
-        $venta['empleado_nombre'] = $empleado['nombre'];
-    }
+    // Obtener nombre del empleado
+    $empleado = $this->empleadosModel->obtenerEmpleadoPorId($id_empleado);
+    $ventas[$index]['empleado_nombre'] = $empleado['nombre'];
+}
+
         include './views/ventas/producto/index.php';
     }
 
@@ -148,5 +157,65 @@ echo "aqui";
         }
     }
     
+
+
+
+    //PELÍCULAS
+
+    public function indexPeliculas() {
+        $ventas = $this->ticketPeliculaModel->obtenerTicketsPelicula();
+        //echo "hoola";
+        // Obtener nombres de clientes y empleados
+    foreach ($ventas as &$venta) {
+        $id_pelicula = $venta['id_pelicula'];
+        $id_cliente = $venta['id_cliente'];
+        $id_empleado = $venta['id_empleado'];
+
+        // Obtener nombre de la película
+        $pelicula = $this->peliculasModel->obtenerPeliculaPorId($id_pelicula);
+        $venta['pelicula_nombre'] = $pelicula['nombre'];
+
+        // Obtener nombre del cliente
+        $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
+        $venta['cliente_nombre'] = $cliente['nombre'];
+
+        // Obtener nombre del empleado
+        $empleado = $this->empleadosModel->obtenerEmpleadoPorId($id_empleado);
+        $venta['empleado_nombre'] = $empleado['nombre'];
+    }
+        include './views/ventas/pelicula/index.php';
+    }
+
+
+       public function crearVentaBoleto() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Obtener datos del formulario
+            $id_cliente = $_POST['id_pelicula'];
+            $id_cliente = $_POST['id_cliente'];
+            $id_empleado = $_POST['id_empleado'];
+            $fecha = $_POST['fecha'];
+            $total = 0;
+            echo "ID Cliente: $id_cliente <br>";
+            echo "ID Empleado: $id_empleado <br>";
+            echo "Fecha: $fecha <br>";
+            echo "<br>";
+           
+
+
+            // Insertar el ticket de venta
+            $ticket_id = $this->ticketPeliculaModel->insertarTicketPelicula($id_pelicula, $id_cliente, $id_empleado, $fecha, $total);
+
+            // Redirigir al listado de ventas
+            header("Location: index.php?controller=VentasController&action=indexPeliculas");
+        } else {
+            // Obtener lista de peliculas para mostrar en el formulario de venta
+            $peliculas = $this->peliculasModel->obtenerPeliculas();
+            var_dump($peliculas);
+            
+            $clientes = $this->clientesModel->obtenerClientes();
+            $empleados = $this->empleadosModel->obtenerEmpleados();
+            include './views/ventas/pelicula/alta.php';
+        }
+    }
 }
 ?>
