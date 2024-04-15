@@ -1,17 +1,17 @@
 <?php
 
-require_once './models/Clientes.php';
+require_once './models/Empleados.php';
 
-class ClientesController {
-    private $clientesModel;
+class EmpleadosController {
+    private $empleadosModel;
 
     public function __construct() {
-        $this->clientesModel = new Clientes();
+        $this->empleadosModel = new Empleados();
     }
 
     public function index() {
-        $clientes = $this->clientesModel->obtenerClientes();
-        include './views/clientes/index.php';
+        $empleados = $this->empleadosModel->obtenerEmpleados();
+        include './views/empleados/index.php';
     }
     public function alta() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,7 +22,7 @@ class ClientesController {
             if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
                 // Nombre inválido, mostrar alerta y redirigir
                 echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=ClientesController&action=alta';</script>";
+                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=alta';</script>";
                 exit();
             }
             
@@ -30,15 +30,15 @@ class ClientesController {
             if (!ctype_digit($edad) || $edad <= 0 || $edad > 100) {
                 // Edad inválida, mostrar alerta y redirigir
                 echo "<script>alert('La edad debe ser un número entero positivo menor o igual a 100');</script>";
-                echo "<script>window.location.href = 'index.php?controller=ClientesController&action=alta';</script>";
+                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=alta';</script>";
                 exit();
             }
     
-            // Si la validación pasa, insertar el cliente y redirigir
-            $this->clientesModel->insertarCliente($nombre, $edad);
-            header("Location: index.php?controller=ClientesController&action=index");
+            // Si la validación pasa, insertar el empleado y redirigir
+            $this->empleadosModel->insertarEmpleado($nombre, $edad);
+            header("Location: index.php?controller=EmpleadosController&action=index");
         } else {
-            include './views/clientes/alta.php';
+            include './views/empleados/alta.php';
         }
     }
     
@@ -52,7 +52,7 @@ class ClientesController {
             if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
                 // Nombre inválido, mostrar alerta y redirigir
                 echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=ClientesController&action=editar&id=$id';</script>";
+                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=editar&id=$id';</script>";
                 exit();
             }
             
@@ -60,24 +60,24 @@ class ClientesController {
             if (!ctype_digit($edad) || $edad <= 0 || $edad > 100) {
                 // Edad inválida, mostrar alerta y redirigir
                 echo "<script>alert('La edad debe ser un número entero positivo menor o igual a 100');</script>";
-                echo "<script>window.location.href = 'index.php?controller=ClientesController&action=editar&id=$id';</script>";
+                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=editar&id=$id';</script>";
                 exit();
             }
     
-            // Si la validación pasa, actualizar el cliente y redirigir
-            $this->clientesModel->actualizarCliente($id, $nombre, $edad);
-            header("Location: index.php?controller=ClientesController&action=index");
+            // Si la validación pasa, actualizar el empleado y redirigir
+            $this->empleadosModel->actualizarEmpleado($id, $nombre, $edad);
+            header("Location: index.php?controller=EmpleadosController&action=index");
         } else {
             $id = $_GET['id'];
-            $cliente = $this->clientesModel->obtenerClientePorId($id);
-            include './views/clientes/editar.php';
+            $empleado = $this->empleadosModel->obtenerEmpleadoPorId($id);
+            include './views/empleados/editar.php';
         }
     }
     
     public function eliminar() {
         $id = $_GET['id'];
-        $this->clientesModel->eliminarCliente($id);
-        header("Location: index.php?controller=ClientesController&action=index");
+        $this->empleadosModel->eliminarEmpleado($id);
+        header("Location: index.php?controller=EmpleadosController&action=index");
     }
 }
 ?>

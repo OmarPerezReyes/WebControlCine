@@ -43,6 +43,8 @@
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="./index.php?controller=ClientesController&action=index">Clientes</a>
+                <a class="nav-link" href="./index.php?controller=EmpleadosController&action=index">Empleados</a>
+
             </li>
         </ul>
 
