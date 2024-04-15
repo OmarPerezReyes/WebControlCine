@@ -45,6 +45,7 @@
                 <a class="nav-link" href="./index.php?controller=ClientesController&action=index">Clientes</a>
                 <a class="nav-link" href="./index.php?controller=EmpleadosController&action=index">Empleados</a>
                 <a class="nav-link" href="./index.php?controller=GenerosController&action=index">Generos</a>
+                <a class="nav-link" href="./index.php?controller=PeliculasController&action=index">Películas</a>
 
             </li>
         </ul>
