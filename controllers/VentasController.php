@@ -227,6 +227,7 @@ if (($clasificacion_pelicula == 'A' && $edad >= 0) ||
     ($clasificacion_pelicula == 'B' && $edad >= 12) ||
     ($clasificacion_pelicula == 'B15' && $edad >= 15) ||
     ($clasificacion_pelicula == 'C' && $edad >= 18) ||
+    ($clasificacion_pelicula == 'AA' && $edad >=0) ||
     ($clasificacion_pelicula == 'D' && $edad >= 18)) {
       // La edad del cliente es adecuada para la clasificación de la película
   
@@ -296,6 +297,7 @@ if (($clasificacion_pelicula == 'A' && $edad >= 0) ||
     ($clasificacion_pelicula == 'B' && $edad >= 12) ||
     ($clasificacion_pelicula == 'B15' && $edad >= 15) ||
     ($clasificacion_pelicula == 'C' && $edad >= 18) ||
+    ($clasificacion_pelicula == 'AA' && $edad >=0) ||
     ($clasificacion_pelicula == 'D' && $edad >= 18)) {
       // La edad del cliente es adecuada para la clasificación de la película
   
@@ -353,5 +355,25 @@ echo "aqui";
         header("Location: index.php?controller=VentasController&action=indexPeliculas");
     }
 }
+
+ 
+    //REPORTES
+    public function ventasDiarias() {
+        // Llamar al método del modelo para obtener las ventas diarias de productos
+        $fecha_actual = date('Y-m-d');
+
+        $ventas_productos = $this->ticketProductoModel->obtenerVentasDiariasProductos($fecha_actual);
+        $ventas_boletos = $this->ticketPeliculaModel->obtenerVentasDiariasPeliculas($fecha_actual);
+        
+        // Retornar el resultado obtenido del modelo
+        //var_dump ($ventas_productos);
+        //var_dump($ventas_boletos);
+        include './views/ventas/ventas_diarias.php';
+
+    }
+    
+    
+    
+
 }
 ?>

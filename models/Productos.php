@@ -37,5 +37,9 @@ class Productos {
         $query = "DELETE FROM producto WHERE id_producto = $id";
         return $this->conexion->conectar()->query($query);
     }
+    
+   
 }
+
+
 ?>
