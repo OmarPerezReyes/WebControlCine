@@ -16,15 +16,8 @@ class GenerosController {
     public function alta() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'];
-            // Validar nombre
-            if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
-                // Nombre inválido, mostrar alerta y redirigir
-                echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=GenerosController&action=alta';</script>";
-                exit();
-            }
-
-            // Si la validación pasa, insertar el genero y redirigir
+          
+            // Insertar el genero y redirigir
             $this->generosModel->insertarGenero($nombre);
 
             header("Location: index.php?controller=GenerosController&action=index");
@@ -38,16 +31,7 @@ class GenerosController {
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
             
-            // Validar nombre
-            if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
-                // Nombre inválido, mostrar alerta y redirigir
-                echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=GenerosController&action=editar&id=$id';</script>";
-                exit();
-            }
-            
-    
-            // Si la validación pasa, actualizar el genero y redirigir
+            // Actualizar el genero y redirigir
             $this->generosModel->actualizarGenero($id, $nombre);
             header("Location: index.php?controller=GenerosController&action=index");
         } else {

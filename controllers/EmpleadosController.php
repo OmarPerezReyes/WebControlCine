@@ -18,23 +18,7 @@ class EmpleadosController {
             $nombre = $_POST['nombre'];
             $edad = $_POST['edad'];
             
-            // Validar nombre
-            if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
-                // Nombre inválido, mostrar alerta y redirigir
-                echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=alta';</script>";
-                exit();
-            }
-            
-            // Validar edad
-            if (!ctype_digit($edad) || $edad <= 0 || $edad > 100) {
-                // Edad inválida, mostrar alerta y redirigir
-                echo "<script>alert('La edad debe ser un número entero positivo menor o igual a 100');</script>";
-                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=alta';</script>";
-                exit();
-            }
-    
-            // Si la validación pasa, insertar el empleado y redirigir
+            // Insertar el empleado y redirigir
             $this->empleadosModel->insertarEmpleado($nombre, $edad);
             header("Location: index.php?controller=EmpleadosController&action=index");
         } else {
@@ -48,23 +32,7 @@ class EmpleadosController {
             $nombre = $_POST['nombre'];
             $edad = $_POST['edad'];
             
-            // Validar nombre
-            if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
-                // Nombre inválido, mostrar alerta y redirigir
-                echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=editar&id=$id';</script>";
-                exit();
-            }
-            
-            // Validar edad
-            if (!ctype_digit($edad) || $edad <= 0 || $edad > 100) {
-                // Edad inválida, mostrar alerta y redirigir
-                echo "<script>alert('La edad debe ser un número entero positivo menor o igual a 100');</script>";
-                echo "<script>window.location.href = 'index.php?controller=EmpleadosController&action=editar&id=$id';</script>";
-                exit();
-            }
-    
-            // Si la validación pasa, actualizar el empleado y redirigir
+            // Actualizar el empleado y redirigir
             $this->empleadosModel->actualizarEmpleado($id, $nombre, $edad);
             header("Location: index.php?controller=EmpleadosController&action=index");
         } else {

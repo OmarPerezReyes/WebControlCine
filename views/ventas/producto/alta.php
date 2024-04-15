@@ -22,7 +22,7 @@
 
         <div class="form-group">
             <label for="fecha">Fecha:</label>
-            <input type="date" name="fecha" class="form-control border-0 border-bottom border-primary mb-3" required>
+            <input type="date" name="fecha" class="form-control border-0 border-bottom border-primary mb-3" required min="2024-01-01" max="2025-12-31">
         </div>
 
         <div class="form-group">

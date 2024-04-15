@@ -20,14 +20,6 @@ class ProductosController {
             $precio = $_POST['precio'];
             $cantidad_inventario = $_POST['cantidad_inventario'];
             $descripcion = $_POST['descripcion'];
-            
-            // Validar nombre
-            if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
-                // Nombre inválido, mostrar alerta y redirigir
-                echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=ProductosController&action=alta';</script>";
-                exit();
-            }
 
             // Insertar el producto y redirigir
             $this->productosModel->insertarProducto($nombre, $precio, $cantidad_inventario, $descripcion);
@@ -45,15 +37,7 @@ class ProductosController {
             $precio = $_POST['precio'];
             $cantidad_inventario = $_POST['cantidad_inventario'];
             $descripcion = $_POST['descripcion'];
-
-            // Validar nombre
-            if (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $nombre)) {
-                // Nombre inválido, mostrar alerta y redirigir
-                echo "<script>alert('El nombre solo puede contener letras y espacios');</script>";
-                echo "<script>window.location.href = 'index.php?controller=ProductosController&action=editar&id=$id';</script>";
-                exit();
-            }
-
+            
             // Actualizar el producto y redirigir
             $this->productosModel->actualizarProducto($id, $nombre, $precio, $cantidad_inventario, $descripcion);
             header("Location: index.php?controller=ProductosController&action=index");

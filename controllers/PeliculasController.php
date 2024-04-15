@@ -70,13 +70,13 @@ class PeliculasController {
             $fecha_fin_cartelera = $_POST['fecha_fin_cartelera'];
             $clasificacion = $_POST['clasificacion'];
 
-            // Validar que la fecha de fin sea posterior a la fecha de inicio
-            if ($fecha_inicio_cartelera >= $fecha_fin_cartelera) {
-                // Mostrar alerta y redirigir
-                echo "<script>alert('La fecha de fin de cartelera debe ser posterior a la fecha de inicio');</script>";
-                echo "<script>window.location.href = 'index.php?controller=PeliculasController&action=editar&id=$id';</script>";
-                exit();
-            }
+        // Validar que la fecha de fin sea posterior a la fecha de inicio
+        if ($fecha_inicio_cartelera >= $fecha_fin_cartelera) {
+            // Mostrar alerta y redirigir
+            echo "<script>alert('La fecha de fin de cartelera debe ser posterior a la fecha de inicio');</script>";
+            echo "<script>window.location.href = 'index.php?controller=PeliculasController&action=editar&id=$id';</script>";
+            exit();
+        }
 
             // Actualizar la película y redirigir
             $this->peliculasModel->actualizarPelicula($id, $nombre, $sinopsis, $id_genero, $fecha_inicio_cartelera, $fecha_fin_cartelera, $clasificacion);

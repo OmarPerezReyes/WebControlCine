@@ -19,13 +19,14 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="fecha_inicio_cartelera">Fecha Inicio Cartelera:</label>
-            <input type="date" name="fecha_inicio_cartelera" class="form-control border-0 border-bottom border-primary mb-3" required>
-        </div>
-        <div class="form-group">
-            <label for="fecha_fin_cartelera">Fecha Fin Cartelera:</label>
-            <input type="date" name="fecha_fin_cartelera" class="form-control border-0 border-bottom border-primary mb-3" required>
-        </div>
+    <label for="fecha_inicio_cartelera">Fecha Inicio Cartelera:</label>
+    <input type="date" name="fecha_inicio_cartelera" class="form-control border-0 border-bottom border-primary mb-3" required min="2024-01-01" max="2025-12-31">
+</div>
+<div class="form-group">
+    <label for="fecha_fin_cartelera">Fecha Fin Cartelera:</label>
+    <input type="date" name="fecha_fin_cartelera" class="form-control border-0 border-bottom border-primary mb-3" required min="2024-01-01" max="2025-12-31">
+</div>
+
         <div class="form-group">
             <label for="clasificacion">Clasificación:</label>
             <select name="clasificacion" class="form-control border-0 border-bottom border-primary mb-3" required>
