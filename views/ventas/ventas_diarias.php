@@ -1,5 +1,5 @@
 <div class="container mt-4">
-    <h2 class="mb-4">Ventas Diarias</h2>
+    <h2 class="mb-4"><?php echo $texto?></h2>
 
     <div class="row">
         <div class="col-md-6">

@@ -186,6 +186,45 @@ class TicketProducto {
         return $ventas_productos;
     }
     
+    public function obtenerVentasDiariasProductosRango($fechaInicio, $fechaFin) {
+        // Consulta SQL para obtener las ventas de productos dentro del rango de fechas
+        $sql = "SELECT * FROM ticket_producto WHERE DATE(fecha) BETWEEN '$fechaInicio' AND '$fechaFin'";
+        $resultado = $this->conexion->conectar()->query($sql);
+        
+        // Array para almacenar las ventas de productos y sus detalles
+        $ventas_productos = array();
+        
+        // Verificar si se encontraron ventas de productos
+        if ($resultado->num_rows > 0) {
+            // Iterar sobre las ventas de productos
+            while ($venta = $resultado->fetch_assoc()) {
+                // Obtener los productos asociados a la venta
+                $productos_asociados = $this->obtenerProductosAsociados($venta['id_ticket_producto']);
+                
+                // Array para almacenar los detalles de los productos asociados
+                $detalles_productos = array();
+                
+                // Iterar sobre los productos asociados y obtener sus nombres y precios
+                foreach ($productos_asociados as $id_producto) {
+                    // Consulta SQL para obtener el nombre y precio del producto
+                    $query_detalle_producto = "SELECT nombre, precio FROM producto WHERE id_producto = '$id_producto'";
+                    $resultado_detalle_producto = $this->conexion->conectar()->query($query_detalle_producto);
+                    
+                    // Verificar si se encontraron los detalles del producto
+                    if ($resultado_detalle_producto->num_rows > 0) {
+                        $detalle_producto = $resultado_detalle_producto->fetch_assoc();
+                        $detalles_productos[] = $detalle_producto;
+                    }
+                }
+                
+                // Agregar detalles de la venta y detalles de los productos al array de ventas de productos
+                $venta['productos_detalles'] = $detalles_productos;
+                $ventas_productos[] = $venta;
+            }
+        }
+        
+        return $ventas_productos;
+    }
     
     
 }
