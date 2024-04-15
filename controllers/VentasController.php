@@ -166,23 +166,26 @@ echo "aqui";
         $ventas = $this->ticketPeliculaModel->obtenerTicketsPelicula();
         //echo "hoola";
         // Obtener nombres de clientes y empleados
-    foreach ($ventas as &$venta) {
-        $id_pelicula = $venta['id_pelicula'];
-        $id_cliente = $venta['id_cliente'];
-        $id_empleado = $venta['id_empleado'];
+  
+    
+    // Obtener nombres de clientes y empleados
+    foreach ($ventas as $index => $venta) {
+    $id_pelicula = $venta['id_pelicula'];
+    $id_cliente = $venta['id_cliente'];
+    $id_empleado = $venta['id_empleado'];
 
-        // Obtener nombre de la película
-        $pelicula = $this->peliculasModel->obtenerPeliculaPorId($id_pelicula);
-        $venta['pelicula_nombre'] = $pelicula['nombre'];
+            // Obtener nombre de la película
+            $pelicula = $this->peliculasModel->obtenerPeliculaPorId($id_pelicula);
+            $ventas[$index]['pelicula_nombre'] = $pelicula['nombre'];
 
-        // Obtener nombre del cliente
-        $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
-        $venta['cliente_nombre'] = $cliente['nombre'];
+    // Obtener nombre del cliente
+    $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
+    $ventas[$index]['cliente_nombre'] = $cliente['nombre'];
 
-        // Obtener nombre del empleado
-        $empleado = $this->empleadosModel->obtenerEmpleadoPorId($id_empleado);
-        $venta['empleado_nombre'] = $empleado['nombre'];
-    }
+    // Obtener nombre del empleado
+    $empleado = $this->empleadosModel->obtenerEmpleadoPorId($id_empleado);
+    $ventas[$index]['empleado_nombre'] = $empleado['nombre'];
+}
         include './views/ventas/pelicula/index.php';
     }
 
@@ -190,18 +193,56 @@ echo "aqui";
        public function crearVentaBoleto() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Obtener datos del formulario
-            $id_cliente = $_POST['id_pelicula'];
+            $id_pelicula = $_POST['id_pelicula'];
             $id_cliente = $_POST['id_cliente'];
             $id_empleado = $_POST['id_empleado'];
             $fecha = $_POST['fecha'];
             $total = 0;
-            echo "ID Cliente: $id_cliente <br>";
-            echo "ID Empleado: $id_empleado <br>";
-            echo "Fecha: $fecha <br>";
-            echo "<br>";
+          
+
+            // Obtener fechas de inicio y fin de la cartelera
+        list($fecha_inicio_cartelera, $fecha_fin_cartelera) = $this->peliculasModel->obtenerFechasCarteleraPorId($id_pelicula);
+
+        // Validar que la fecha seleccionada esté dentro del rango de la cartelera
+        $fecha_timestamp = strtotime($fecha);
+        $inicio_cartelera_timestamp = strtotime($fecha_inicio_cartelera);
+        $fin_cartelera_timestamp = strtotime($fecha_fin_cartelera);
+
+        if ($fecha_timestamp < $inicio_cartelera_timestamp || $fecha_timestamp > $fin_cartelera_timestamp) {
+            // La fecha seleccionada está fuera del rango de la cartelera
+            echo "<script>alert('La fecha seleccionada está fuera del rango de la cartelera');</script>";
+            echo "<script>window.location.href = 'index.php?controller=VentasController&action=indexPeliculas';</script>";
+            exit();
+        }
+ // Calcular el total basado en la edad del cliente
+ $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
+ $edad = $cliente['edad'];
+// echo $edad;
            
-
-
+$pelicula = $this->peliculasModel->obtenerPeliculaPorId($id_pelicula);
+$clasificacion_pelicula = $pelicula['clasificacion'];
+//echo $clasificacion_pelicula;
+// Verificar si la edad del cliente corresponde a la clasificación de la película
+if (($clasificacion_pelicula == 'A' && $edad >= 0) ||
+    ($clasificacion_pelicula == 'B' && $edad >= 12) ||
+    ($clasificacion_pelicula == 'B15' && $edad >= 15) ||
+    ($clasificacion_pelicula == 'C' && $edad >= 18) ||
+    ($clasificacion_pelicula == 'D' && $edad >= 18)) {
+      // La edad del cliente es adecuada para la clasificación de la película
+  
+    echo "bien";      
+    
+} else {
+    echo "<script>alert('La edad del cliente no corresponde a la clasificación de la película seleccionada.');</script>";
+    echo "<script>window.location.href = 'index.php?controller=VentasController&action=indexPeliculas';</script>";
+    exit();
+}
+    // Asignar el precio correspondiente
+    if ($edad >= 14 && $edad <= 60) {
+        $total = 85; // Precio para adultos
+    } else if ($edad < 14 || $edad > 60) {
+        $total = 65; // Precio para niños y adultos de la tercera edad
+    }
             // Insertar el ticket de venta
             $ticket_id = $this->ticketPeliculaModel->insertarTicketPelicula($id_pelicula, $id_cliente, $id_empleado, $fecha, $total);
 
@@ -210,12 +251,107 @@ echo "aqui";
         } else {
             // Obtener lista de peliculas para mostrar en el formulario de venta
             $peliculas = $this->peliculasModel->obtenerPeliculas();
-            var_dump($peliculas);
+            //var_dump($peliculas);
             
             $clientes = $this->clientesModel->obtenerClientes();
             $empleados = $this->empleadosModel->obtenerEmpleados();
             include './views/ventas/pelicula/alta.php';
         }
     }
+    
+    public function editarVentaPelicula() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Obtener datos del formulario
+            $id_ticket_pelicula = $_POST['id_ticket_pelicula'];
+            $id_pelicula = $_POST['id_pelicula'];
+            $id_cliente = $_POST['id_cliente'];
+            $id_empleado = $_POST['id_empleado'];
+            $fecha = $_POST['fecha'];
+            $total = 0;
+            // Obtener fechas de inicio y fin de la cartelera
+            list($fecha_inicio_cartelera, $fecha_fin_cartelera) = $this->peliculasModel->obtenerFechasCarteleraPorId($id_pelicula);
+    
+            // Validar que la fecha seleccionada esté dentro del rango de la cartelera
+            $fecha_timestamp = strtotime($fecha);
+            $inicio_cartelera_timestamp = strtotime($fecha_inicio_cartelera);
+            $fin_cartelera_timestamp = strtotime($fecha_fin_cartelera);
+    
+            if ($fecha_timestamp < $inicio_cartelera_timestamp || $fecha_timestamp > $fin_cartelera_timestamp) {
+                // La fecha seleccionada está fuera del rango de la cartelera
+                echo "<script>alert('La fecha seleccionada está fuera del rango de la cartelera');</script>";
+                echo "<script>window.location.href = 'index.php?controller=VentasController&action=indexPeliculas';</script>";
+                exit();
+            }
+            
+ // Calcular el total basado en la edad del cliente
+ $cliente = $this->clientesModel->obtenerClientePorId($id_cliente);
+ $edad = $cliente['edad'];
+// echo $edad;
+           
+$pelicula = $this->peliculasModel->obtenerPeliculaPorId($id_pelicula);
+$clasificacion_pelicula = $pelicula['clasificacion'];
+//echo $clasificacion_pelicula;
+// Verificar si la edad del cliente corresponde a la clasificación de la película
+if (($clasificacion_pelicula == 'A' && $edad >= 0) ||
+    ($clasificacion_pelicula == 'B' && $edad >= 12) ||
+    ($clasificacion_pelicula == 'B15' && $edad >= 15) ||
+    ($clasificacion_pelicula == 'C' && $edad >= 18) ||
+    ($clasificacion_pelicula == 'D' && $edad >= 18)) {
+      // La edad del cliente es adecuada para la clasificación de la película
+  
+    echo "bien";      
+    
+} else {
+    echo "<script>alert('La edad del cliente no corresponde a la clasificación de la película seleccionada.');</script>";
+    echo "<script>window.location.href = 'index.php?controller=VentasController&action=indexPeliculas';</script>";
+    exit();
+}
+    // Asignar el precio correspondiente
+    if ($edad >= 14 && $edad <= 60) {
+        $total = 85; // Precio para adultos
+    } else if ($edad < 14 || $edad > 60) {
+        $total = 65; // Precio para niños y adultos de la tercera edad
+    }
+    
+
+            // Actualizar el ticket de venta
+            $this->ticketPeliculaModel->actualizarTicketPelicula($id_ticket_pelicula, $id_pelicula, $id_cliente, $id_empleado, $fecha, $total);
+            //echo "bien";
+    
+            // Redirigir al listado de ventas
+           header("Location: index.php?controller=VentasController&action=indexPeliculas");
+        } else {
+            // Obtener el ID del ticket de película a editar
+            $id_ticket_pelicula = $_GET['id'];
+
+            // Obtener datos de la venta de boleto de película para mostrar en el formulario de edición
+            $venta = $this->ticketPeliculaModel->obtenerTicketPeliculaPorId($id_ticket_pelicula);
+    
+            // Obtener lista de películas, clientes y empleados para mostrar en el formulario de edición
+            $peliculas = $this->peliculasModel->obtenerPeliculas();
+            $clientes = $this->clientesModel->obtenerClientes();
+            $empleados = $this->empleadosModel->obtenerEmpleados();
+    
+            // Incluir el formulario de edición
+            include './views/ventas/pelicula/editar.php';
+        }
+    }
+    
+
+
+public function eliminarTicketPelicula() {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+        $id_ticket_pelicula = $_GET['id'];
+echo "aqui";
+        // Eliminar el ticket de pelicula y los registros asociados en la tabla intermedia
+        $this->ticketPeliculaModel->eliminarTicketPelicula($id_ticket_pelicula);
+
+        // Redirigir al listado de ventas de peliculas
+        header("Location: index.php?controller=VentasController&action=indexPeliculas");
+    } else {
+        // Si no se proporciona un ID de ticket de pelicula, redirigir a la página de listado de ventas de peliculas
+        header("Location: index.php?controller=VentasController&action=indexPeliculas");
+    }
+}
 }
 ?>

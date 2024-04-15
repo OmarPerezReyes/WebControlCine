@@ -41,5 +41,26 @@ class Peliculas {
         $query = "DELETE FROM pelicula WHERE id_pelicula = $id";
         return $this->conexion->conectar()->query($query);
     }
+    
+public function obtenerFechasCarteleraPorId($id_pelicula) {
+    $query = "SELECT fecha_inicio_cartelera, fecha_fin_cartelera FROM pelicula WHERE id_pelicula = $id_pelicula";
+    $result = $this->conexion->conectar()->query($query);
+
+    // Verificar si se obtuvieron resultados
+    if ($result) {
+        // Extraer las fechas de inicio y fin de la cartelera de la fila obtenida
+        $cartelera = $result->fetch_assoc();
+        $fecha_inicio_cartelera = $cartelera['fecha_inicio_cartelera'];
+        $fecha_fin_cartelera = $cartelera['fecha_fin_cartelera'];
+        // Devolver las fechas de inicio y fin de la cartelera
+        return array($fecha_inicio_cartelera, $fecha_fin_cartelera);
+    } else {
+        // Si no se encuentran datos, devolver un array vacío o null
+        return array();
+    }
 }
+}
+
+
+
 ?>

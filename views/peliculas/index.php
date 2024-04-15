@@ -17,7 +17,8 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($peliculas as $pelicula): ?>
+            <?php // var_dump($peliculas);
+             foreach ($peliculas as $pelicula): ?>
                 <tr>
                     <td><?php echo $pelicula['id_pelicula']; ?></td>
                     <td><?php echo $pelicula['nombre']; ?></td>
