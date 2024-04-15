@@ -53,6 +53,7 @@
                 <!--Reportes-->
                 <a class="nav-link" href="./index.php?controller=VentasController&action=ventasDiarias">Ventas diarias</a>
                 <a class="nav-link" href="./index.php?controller=VentasController&action=leerRango">Ventas por rango de fecha</a>
+                <a class="nav-link" href="./index.php?controller=VentasController&action=productosMasVendidosRango">5 productos más vendidos por rango de fecha</a>
                 <a class="nav-link" href="./index.php?controller=ClientesController&action=index">Listado de clientes</a>
                 <a class="nav-link" href="./index.php?controller=EmpleadosController&action=index">Listdo de empleados</a>
             </li>

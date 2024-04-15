@@ -406,6 +406,38 @@ echo "aqui";
         
     }
     
+    public function productosMasVendidosRango() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $fechaInicio = $_POST['fechaInicio'];
+            $fechaFin = $_POST['fechaFin'];
+
+            // Convertir las fechas a objetos DateTime para compararlas
+            $fechaInicioObj = new DateTime($fechaInicio);
+            $fechaFinObj = new DateTime($fechaFin);
+            
+            // Verificar que la fecha de inicio sea menor que la fecha de fin
+            if($fechaInicioObj < $fechaFinObj) {
+                // Llamar al método del modelo para obtener las ventas diarias de productos
+                $ventas_productos = $this->ticketProductoModel->obtenerVentasDiariasProductosRango($fechaInicio, $fechaFin);
+                $ventas_boletos = $this->ticketPeliculaModel->obtenerVentasDiariasPeliculasRango($fechaInicio, $fechaFin);
+                $texto = "5 productos más vendidos del $fechaInicio al $fechaFin";
+                //var_dump($ventas_productos);
+                // Retornar el resultado obtenido del modelo
+                include './views/ventas/masVendidos.php';
+                return;
+            }
+            else{
+                echo "<script>alert('Las fechas no son un rango válido, debe ser una antes que la otra.');</script>";
+                echo "<script>window.location.href = './index.php?controller=VentasController&action=leerRango';</script>";
+                exit(); 
+            }
+        }
+        else{
+
+            include './views/ventas/leerRangoDos.php';
+        }
+        
+    }
 
     
 
